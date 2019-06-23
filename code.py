@@ -5,7 +5,9 @@ __author__ = 'Bhavesh Kumar'
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
+from joblib import dump, load
+# from mpl_toolkits.mplot3d import Axes3D
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
@@ -54,19 +56,36 @@ def gradient_descent_algo(X, Y, alpha, iterations):
     return theta
 
 '''
-Data Manipulation
-'''
-autompg = pd.read_csv('../../data/mpg.csv')
+Data downloading and preprocessing
+Dataset: https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
+Columns:
+    1. mpg:           continuous
+    2. cylinders:     multi-valued discrete
+    3. displacement:  continuous
+    4. horsepower:    continuous
+    5. weight:        continuous
+    6. acceleration:  continuous
+    7. model year:    multi-valued discrete
+    8. origin:        multi-valued discrete
+    9. car name:      string (unique for each instance)
 
-X = autompg.as_matrix(columns=['displacement', 'acceleration'])
+'''
+
+column_names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model_year', 'origin', 'car_name']
+autompg = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data', sep='\s+', names = column_names)
+autompg = autompg.iloc[:,:8]
+autompg = autompg.apply(pd.to_numeric, errors='coerce').dropna() # convert to numeric and drop rows with nan values
+# print(autompg.isna()) # check if data has invalid values
+
+X = autompg.iloc[:, 1:].values
 X = feature_normalize(X)
 x0 = np.ones(len(X))
 X = np.column_stack((x0, X))
-Y = autompg.as_matrix(columns=['mpg'])
+Y = autompg[['mpg']].values
 Y = Y[:,0]
 
 iterations = 1000
-alpha = 0.1
+alpha = 0.01
 
 theta = gradient_descent_algo(X, Y, alpha, iterations)
 
@@ -89,6 +108,12 @@ reg = LinearRegression()
 reg = reg.fit(X, Y)
 slm_theta = reg.coef_
 print(slm_theta)
+
+# save model
+dump(reg, 'model.joblib') 
+
+# load model
+reg = load('model.joblib') 
 Y_pred = reg.predict(X)
 rmseValue = np.sqrt(mean_squared_error(Y, Y_pred))
 r_sq_score = reg.score(X, Y)
@@ -96,9 +121,8 @@ r_sq_score = reg.score(X, Y)
 print('Using sklearn LinearRegression library')
 print('RMSE = %.10f \nR Square(R2) = %.10f\n-----'%(rmseValue,r_sq_score))
 
-'''
-3D Plot before
-'''
+# 3D Plot before
+
 fig2 = plt.figure(figsize=(8,5))
 ax2 = plt.axes(projection='3d')
 displacement = X[:,1]
@@ -109,9 +133,9 @@ ax2.set_xlabel('Displacement')
 ax2.set_ylabel('Acceleration')
 ax2.set_zlabel('MPG')
 
-'''
-3D Plot after
-'''
+
+# 3D Plot after
+
 fig = plt.figure(figsize=(8,5))
 ax = plt.axes(projection='3d')
 displacement = X[:,1]
