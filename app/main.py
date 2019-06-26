@@ -24,6 +24,6 @@ def train():
 
 @app.route('/test')
 def predict():
-    data = request.data
-    X = json.loads(data)
+    data = json.loads(request.data)
+    X = util.json_to_np(data)
     return model.predict(X)

@@ -36,3 +36,13 @@ class util:
         y = autompg[['mpg']].values
         y = y[:,0]
         return X, y
+
+    @staticmethod
+    def json_to_np(data):
+        return np.array([[data['cylinders'], 
+                          data['displacement'], 
+                          data['horsepower'],
+                          data['weight'],
+                          data['acceleration'],
+                          data['model_year'],
+                          data['origin']]])
