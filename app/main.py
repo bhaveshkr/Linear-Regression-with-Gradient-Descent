@@ -27,3 +27,6 @@ def predict():
     data = json.loads(request.data)
     X = util.json_to_np(data)
     return model.predict(X)
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0')

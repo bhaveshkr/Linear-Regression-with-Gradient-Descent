@@ -31,7 +31,6 @@ class util:
         # print(autompg.isna()) # check if data has invalid values
 
         X = autompg.iloc[:, 1:].values
-        print X[0]
         X = util.feature_normalize_train(X)
         x0 = np.ones(len(X))
         X = np.column_stack((x0, X))

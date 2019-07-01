@@ -19,22 +19,22 @@ Columns:
 Go to the project directory and build docker image using this command.
 
 ```
-docker build -t mpg_image .
+docker build -t linear .
 ```
 
 Run docker container:
 ```
-docker run -d --name mpg_container -p 80:80 mpg_image
+docker run --name linear_container -p5000:5000 linear:latest
 ```
 
 Once container starts running, you can access your application using these endpoints:
 
-### To train the model: http://127.0.0.1/train
+### To train the model: http://0.0.0.0:5000/train
 
 
 ### To test the model, post data to get prediction
 
-URL: http://127.0.0.1/test
+URL: http://0.0.0.0:5000/test
 ```json
 { "cylinders": 8, "displacement": 307.0, "horsepower": 130.0, "weight": 3504, "acceleration": 12.0, "model_year": 70, "origin": 1}
 ```
