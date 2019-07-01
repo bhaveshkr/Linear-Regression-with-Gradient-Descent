@@ -29,14 +29,14 @@ docker run --name linear_container -p5000:5000 linear:latest
 
 Once container starts running, you can access your application using these endpoints:
 
-### To train the model: http://0.0.0.0:5000/train
-
+### To train the model
+```
+curl http://0.0.0.0:5000/train
+```
 
 ### To test the model, post data to get prediction
-
-URL: http://0.0.0.0:5000/test
-```json
-{ "cylinders": 8, "displacement": 307.0, "horsepower": 130.0, "weight": 3504, "acceleration": 12.0, "model_year": 70, "origin": 1}
+```
+curl -X POST -H "Content-Type: application/json" http://0.0.0.0:5000/test -d '{ "cylinders": 8, "displacement": 307.0, "horsepower": 130.0, "weight": 3504, "acceleration": 12.0, "model_year": 70, "origin": 1}'
 ```
 
 
