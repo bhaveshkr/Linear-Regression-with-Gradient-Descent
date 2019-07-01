@@ -1,5 +1,6 @@
 import sys
 import json
+import numpy as np
 
 from flask import Flask, request
 from util import util
@@ -21,8 +22,7 @@ def train():
     X, y = util.preprocess()
     return model.train(X, y)
 
-
-@app.route('/test')
+@app.route('/test', methods=['POST'])
 def predict():
     data = json.loads(request.data)
     X = util.json_to_np(data)

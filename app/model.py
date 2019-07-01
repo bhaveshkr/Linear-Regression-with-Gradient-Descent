@@ -63,6 +63,5 @@ class model:
     Predict a value given input
     '''
     def predict(self, X):
-        X = util.feature_normalize_inference(X)
         fitted_model = load('model/model.joblib')
         return 'Miles Per Gallon = %.10f'%(fitted_model.predict(X))

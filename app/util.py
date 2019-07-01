@@ -13,8 +13,9 @@ class util:
     @staticmethod
     def feature_normalize_train(X):
         scaler = StandardScaler()
+        scaler = scaler.fit(X)
         dump(scaler, 'model/scaler.joblib')
-        return scaler.fit_transform(X)
+        return scaler.transform(X)
     
     # Feature scaling during inference
     @staticmethod
@@ -30,6 +31,7 @@ class util:
         # print(autompg.isna()) # check if data has invalid values
 
         X = autompg.iloc[:, 1:].values
+        print X[0]
         X = util.feature_normalize_train(X)
         x0 = np.ones(len(X))
         X = np.column_stack((x0, X))
@@ -39,10 +41,13 @@ class util:
 
     @staticmethod
     def json_to_np(data):
-        return np.array([[data['cylinders'], 
+        X = np.array([[data['cylinders'], 
                           data['displacement'], 
                           data['horsepower'],
                           data['weight'],
                           data['acceleration'],
                           data['model_year'],
                           data['origin']]])
+        X = util.feature_normalize_inference(X)
+        x0 = np.ones(len(X))
+        return np.column_stack((x0, X))
